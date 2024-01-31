@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,31 +12,25 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: SignUpPage(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-  
-  get hintText => null;
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool _isSigning = false;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+class _SignUpPageState extends State<SignUpPage> {
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _password2Controller = TextEditingController();
+
+  bool isSigningUp = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +39,9 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: const Color.fromARGB(255, 59, 59, 59),
         automaticallyImplyLeading: false,
         title: Center(
-          child: Text("Login Page",
-          style: TextStyle(color: Colors.white),
-          
+          child: Text(
+            "Register Page",
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
@@ -59,20 +52,45 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset("assets/user-login.png",
-                width: 200,
-                height: 200,
+                Image.asset(
+                  "assets/user-login.png",
+                  width: 100,
+                  height: 100,
                 ),
                 Text(
-                  "Login",
+                  "Sign Up",
                   style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 FormContainerWidget(
-                  controller: _emailController,
+                  
+                  hintText: "Name",
+                  isPasswordField: false,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                 
+                  hintText: "Surname",
+                  isPasswordField: false,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                  
                   hintText: "Email",
+                  isPasswordField: false,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                 
+                  hintText: "Phone number",
                   isPasswordField: false,
                 ),
                 SizedBox(
@@ -84,11 +102,20 @@ class _LoginPageState extends State<LoginPage> {
                   isPasswordField: true,
                 ),
                 SizedBox(
+                  height: 10,
+                ),
+                FormContainerWidget(
+                  controller: _password2Controller,
+                  hintText: "Confirm Password",
+                  isPasswordField: true,
+                ),
+                SizedBox(
                   height: 30,
                 ),
+                
                 GestureDetector(
                   onTap: () {
-                    ();
+                    // Implement sign-up logic here
                   },
                   child: Container(
                     width: double.infinity,
@@ -98,71 +125,39 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Center(
-                      child: _isSigning ? CircularProgressIndicator(
-                        color: Colors.white,) : Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10,),
-                GestureDetector(
-                  onTap: () {
-                    ();
-            
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          
-                          SizedBox(width: 5,),
-                          Text(
-                            "Sign in with Google",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                      child: isSigningUp
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 ),
-            
-            
                 SizedBox(
                   height: 20,
                 ),
-            
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account?"),
+                    Text("Already have an account?"),
                     SizedBox(
                       width: 5,
                     ),
                     GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
+                        onTap: () {
+                          // Navigate to login page
+                        },
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
+                    
                   ],
                 ),
               ],
@@ -172,14 +167,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }
 
-
 class FormContainerWidget extends StatefulWidget {
-
   final TextEditingController? controller;
-  final Key? fieldKey;
   final bool? isPasswordField;
   final String? hintText;
   final String? labelText;
@@ -192,25 +183,21 @@ class FormContainerWidget extends StatefulWidget {
   const FormContainerWidget({
     this.controller,
     this.isPasswordField,
-    this.fieldKey,
     this.hintText,
     this.labelText,
     this.helperText,
     this.onSaved,
     this.validator,
     this.onFieldSubmitted,
-    this.inputType
+    this.inputType,
   });
-
 
   @override
   _FormContainerWidgetState createState() => new _FormContainerWidgetState();
 }
 
 class _FormContainerWidgetState extends State<FormContainerWidget> {
-
   bool _obscureText = true;
-
 
   @override
   Widget build(BuildContext context) {
@@ -221,28 +208,33 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
         color: Colors.grey.withOpacity(.35),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: new TextFormField(
+      child: TextFormField(
         style: TextStyle(color: Colors.black),
         controller: widget.controller,
         keyboardType: widget.inputType,
-        key: widget.fieldKey,
-        obscureText: widget.isPasswordField == true? _obscureText : false,
+        obscureText: widget.isPasswordField == true ? _obscureText : false,
         onSaved: widget.onSaved,
         validator: widget.validator,
         onFieldSubmitted: widget.onFieldSubmitted,
-        decoration: new InputDecoration(
+        decoration: InputDecoration(
           border: InputBorder.none,
           filled: true,
           hintText: widget.hintText,
           hintStyle: TextStyle(color: Colors.black45),
-          suffixIcon: new GestureDetector(
+          suffixIcon: GestureDetector(
             onTap: () {
               setState(() {
                 _obscureText = !_obscureText;
               });
             },
-            child:
-            widget.isPasswordField==true? Icon(_obscureText ? Icons.visibility_off : Icons.visibility, color: _obscureText == false ? Colors.blue : Colors.grey,) : Text(""),
+            child: widget.isPasswordField == true
+                ? Icon(
+                    _obscureText
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                    color: _obscureText == false ? Colors.blue : Colors.grey,
+                  )
+                : Text(""),
           ),
         ),
       ),
